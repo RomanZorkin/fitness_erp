@@ -21,11 +21,19 @@ class DeviceAdmin(admin.ModelAdmin):
     search_fields = ('purchase_date', 'device_type')
 
 
+class ExpenseAdmin(admin.ModelAdmin):
+    list_display = ('name', 'expenses_type')
+    list_display_links = ('name', 'expenses_type')
+    search_fields = ('name', 'expenses_type')
+
+
 admin.site.register(models.Bb, BbAdmin)
 admin.site.register(models.Rubric)
 admin.site.register(models.DeviceCost, DeviceAdmin)
 admin.site.register(models.ServiceCost, ServiceAdmin)
-admin.site.register(models.DeviceType)
+#admin.site.register(models.DeviceType)
 admin.site.register(models.DeviceRoom)
-admin.site.register(models.DeviceGroup)
-admin.site.register(models.ServiceType)
+#admin.site.register(models.DeviceGroup)
+#admin.site.register(models.ServiceType)
+admin.site.register(models.ExpensesType)
+admin.site.register(models.Expenses, ExpenseAdmin)

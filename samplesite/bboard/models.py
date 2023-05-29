@@ -30,18 +30,6 @@ class Rubric(models.Model):
         ordering = ['name']
 
 
-class ServiceType(models.Model):
-    name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = 'Виды услуг'
-        verbose_name = 'Вид услуги'
-        ordering = ['name']
-
-
 class DeviceRoom(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
 
@@ -54,33 +42,34 @@ class DeviceRoom(models.Model):
         ordering = ['name']
 
 
-class DeviceGroup(models.Model):
+class ExpensesType(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'Группы оборудования'
-        verbose_name = 'Группа оборудования'
-        ordering = ['name']
+        verbose_name_plural = 'Группы расходов'
+        verbose_name = 'Группа расходов'
+        ordering = ['name']       
 
 
-class DeviceType(models.Model):
+class Expenses(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
-
-    def __str__(self):
-        return self.name
+    expenses_type =  models.ForeignKey(
+        'bboard.ExpensesType', null=True, on_delete=models.PROTECT, verbose_name='Группа расходов',
+    )
 
     class Meta:
-        verbose_name_plural = 'Виды оборудования'
-        verbose_name = 'Вид оборудования'
+        verbose_name_plural = 'Виды расходов'
+        verbose_name = 'Вид расходов'
         ordering = ['name']
+
 
 
 class ServiceCost(models.Model):
     service_type = models.ForeignKey(
-        'ServiceType', null=True, on_delete=models.PROTECT, verbose_name='Вид услуги',
+        'bboard.Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид услуги',
     )
     purchase_date = models.DateField(verbose_name='Дата расхода')
     unit = models.CharField(null=True, max_length=20, verbose_name='Единица измерения')
@@ -96,11 +85,8 @@ class ServiceCost(models.Model):
 
 class DeviceCost(models.Model):
     device_type = models.ForeignKey(
-        'DeviceType', null=True, on_delete=models.PROTECT, verbose_name='Вид оборудования',
-    )
-    device_group = models.ForeignKey(
-        'DeviceGroup', null=True, on_delete=models.PROTECT, verbose_name='Группа оборудования',
-    )
+        'Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид оборудования',
+    )    
     device_room = models.ForeignKey(
         'DeviceRoom', null=True, on_delete=models.PROTECT, verbose_name='Место размещения',
     )
