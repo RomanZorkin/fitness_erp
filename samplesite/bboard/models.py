@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from bboard import config
@@ -96,24 +97,17 @@ class ExpensesPlan(models.Model):
     price = models.FloatField(null=True, verbose_name='Цена')
     cost = models.FloatField(null=True, verbose_name='Стоимость')
 
+    def clean(self):
+        errors = {}
+        if self.cost != self.number * self.price:
+            errors['cost'] = ValidationError(
+                'Значение в поле стоимость не равно произведению цены и количества',
+            )
+        if errors:
+            raise ValidationError(errors)
+
     class Meta:
         verbose_name_plural = 'Расходы на услуги'
         verbose_name = 'Расходы на услуги'
         ordering = ['purchase_date', 'expense']
         unique_together = ('expense', 'purchase_date',)
-
-
-class ServiceCost(models.Model):
-    service_type = models.ForeignKey(
-        'Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид услуги',
-    )
-    purchase_date = models.DateField(verbose_name='Дата расхода')
-    unit = models.CharField(null=True, max_length=20, verbose_name='Единица измерения')
-    number = models.PositiveIntegerField(null=True, verbose_name='Кол-во')
-    price = models.FloatField(null=True, verbose_name='Цена')
-    cost = models.FloatField(null=True, verbose_name='Стоимость')
-
-    class Meta:
-        verbose_name_plural = 'Расходы на услуги'
-        verbose_name = 'Расходы на услуги'
-        ordering = ['purchase_date', 'service_type']

@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 
 from bboard import models
-from bboard.forms import AddService, BbForm
+from bboard.forms import AddDevice, AddService, BbForm
 from bboard.repos import service
 
 
@@ -13,15 +13,23 @@ class BbCreateView(CreateView):
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['rubrics'] = models.Rubric.objects.all()
+        context = super().get_context_data(**kwargs)        
+        return context
+
+
+class AddDeviceView(CreateView):
+    template_name = 'bboard/add_device.html'
+    form_class = AddDevice
+    success_url = reverse_lazy('deviceadd')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)        
         return context
 
 
 def index(request):
-    bbs = models.Bb.objects.all()
-    rubrics = models.Rubric.objects.all()
-    context = {'bbs': bbs, 'rubrics': rubrics}
+    bbs = models.Bb.objects.all()    
+    context = {'bbs': bbs}
     return render(request, 'bboard/index.html', context)
 
 
@@ -35,11 +43,12 @@ def by_rubric(request, rubric_id):
 
 def add_service(request):
     if request.method == 'POST':
-        form = AddService(request.POST)        
+        form = AddService(request.POST)
         if form.is_valid():
             service.put_periodicity(form)
     else:
-        form = AddService()        
-    rubrics = models.Rubric.objects.all()
-    context = {'rubrics': rubrics, 'form': form}
+        form = AddService()    
+    context = {'form': form}
     return render(request, 'bboard/add_service.html', context)
+
+

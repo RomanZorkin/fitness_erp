@@ -12,6 +12,17 @@ class BbForm(forms.ModelForm):
         fields = ('title', 'content', 'price', 'rubric')
 
 
+class AddDevice(forms.ModelForm):
+    class Meta:
+        model = models.ExpensesPlan
+        fields = ('expense', 'purchase_date', 'unit', 'number', 'price', 'cost')
+        widgets = {
+            'purchase_date': forms.DateInput(
+                attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'},
+            ),
+        }
+
+
 class AddService(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -26,6 +37,8 @@ class AddService(forms.Form):
         start_period = cleaned_data.get('periodicity_start')
         periodicity = int(cleaned_data.get('periodicity'))
         start_project = config.BaseDates().start.date()
+        count_cost  =  cleaned_data.get('price') * cleaned_data.get('number')
+        cost = cleaned_data.get('cost')
         new_date = date(
             year=start_period.year,
             month=start_period.month,
@@ -44,6 +57,10 @@ class AddService(forms.Form):
                 raise ValidationError(
                     f'Число начисления расходов {new_date} ранее даты начала расходов {start_project}'
                 )
+        if cost != count_cost:
+            raise ValidationError(
+                'Значение в поле стоимость не равно произведению цены и количества',
+            )
         return cleaned_data
 
     service_type = forms.ChoiceField(label='Вид услуги')
@@ -63,7 +80,7 @@ class AddService(forms.Form):
             attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'},
         ),
         label='Дата окончания расходов',
-    )    
+    )
     unit = forms.CharField(max_length=10, label='Единица измерения')
     number = forms.IntegerField(max_value=10000000, label='Кол-во')
     price = forms.FloatField(max_value=10000000, label='Цена')
