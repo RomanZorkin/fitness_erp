@@ -7,10 +7,10 @@ from bboard.handler import service
 def put_periodicity(form: forms.AddService):
     service_info = service.ServiceInfo(form)
     insert_list = []
-    for form_data in service_info.get_list().service_data:
-        service_type = models.Expenses.objects.get(pk=form_data.service_type)
+    for form_data in service_info.get_list().expense_data:
+        expense = models.Expenses.objects.get(pk=form_data.expense)
         insert_list.append(models.ExpensesPlan(
-            expense=service_type,
+            expense=expense,
             purchase_date=form_data.purchase_date,
             unit=form_data.unit,
             number=form_data.number,

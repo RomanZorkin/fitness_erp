@@ -46,12 +46,12 @@ class ServiceInfo():
             self.date_list.append(new_date)
             new_date = self._add_month(new_date, int(self.data['periodicity']))
 
-    def get_list(self) -> schemas.ServiceList:
+    def get_list(self) -> schemas.ExpensesList:
         data_list = []
         for purchase_date in self.date_list:
             data_list.append(
-                schemas.ServiceData(
-                    service_type=self.data['service_type'],
+                schemas.ExpenseData(
+                    expense=self.data['service_type'],
                     purchase_date=purchase_date,
                     unit=self.data['unit'],
                     number=self.data['number'],
@@ -59,4 +59,4 @@ class ServiceInfo():
                     cost=self.data['cost'],
                 )
             )
-        return schemas.ServiceList(service_data=data_list)
+        return schemas.ExpensesList(expense_data=data_list)

@@ -4,8 +4,8 @@ from typing import List
 from pydantic import BaseModel
 
 
-class ServiceData(BaseModel):
-    service_type: str
+class ExpenseData(BaseModel):
+    expense: str
     purchase_date: date
     unit: str
     number: int
@@ -13,5 +13,19 @@ class ServiceData(BaseModel):
     cost: float
 
 
-class ServiceList(BaseModel):
-    service_data: List[ServiceData]
+class ExpensesList(BaseModel):
+    expense_data: List[ExpenseData]
+
+
+class Expenses(BaseModel):
+    expense: str
+    expense_type: str
+    expense_area: str
+    purchase_date: date
+    unit: str
+    number: int
+    price: float
+    cost: float
+
+class ExpensesAll(BaseModel):
+    records: List[Expenses]

@@ -9,4 +9,5 @@ urlpatterns = [
     path('add/', views.BbCreateView.as_view(), name='add'),
     path('servadd/', views.add_service, name='servadd'),
     path('deviceadd/', views.AddDeviceView.as_view(), name='deviceadd'),
+    path('expenses/', views.expenses_all, name='expenses'),
 ]
