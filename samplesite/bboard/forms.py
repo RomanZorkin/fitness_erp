@@ -17,7 +17,7 @@ class AddService(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AddService, self).__init__(*args, **kwargs)
         self.fields['service_type'].choices = [
-            (row.pk, row.name) for row in models.ServiceType.objects.all()
+            (row.pk, row.name) for row in models.Expenses.objects.all()
         ]
 
     def clean(self):

@@ -1,5 +1,7 @@
 from django.db import models
 
+from bboard import config
+
 
 class Bb(models.Model):
     title = models.CharField(max_length=50, verbose_name='Товар')
@@ -30,11 +32,18 @@ class Rubric(models.Model):
         ordering = ['name']
 
 
-class DeviceRoom(models.Model):
+class ExpensesArea(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_default_pk(cls):
+        area, created = cls.objects.get_or_create(
+            name=config.DEFAULT_AREA,
+        )
+        return area.pk
 
     class Meta:
         verbose_name_plural = 'Места размещения'
@@ -51,25 +60,52 @@ class ExpensesType(models.Model):
     class Meta:
         verbose_name_plural = 'Группы расходов'
         verbose_name = 'Группа расходов'
-        ordering = ['name']       
+        ordering = ['name']
 
 
 class Expenses(models.Model):
     name = models.CharField(max_length=20, db_index=True, verbose_name='Название')
-    expenses_type =  models.ForeignKey(
-        'bboard.ExpensesType', null=True, on_delete=models.PROTECT, verbose_name='Группа расходов',
+    expenses_type = models.ForeignKey(
+        'ExpensesType', null=True, on_delete=models.PROTECT, verbose_name='Группа расходов',
     )
+    expense_area = models.ForeignKey(
+        'ExpensesArea',
+        default=ExpensesArea.get_default_pk,
+        null=True,
+        on_delete=models.PROTECT,
+        verbose_name='Местоположение',
+    )
+
+    def __str__(self):
+        return f'{self.name}/{self.expense_area}'
 
     class Meta:
         verbose_name_plural = 'Виды расходов'
         verbose_name = 'Вид расходов'
         ordering = ['name']
+        unique_together = ('name', 'expense_area',)
 
+
+class ExpensesPlan(models.Model):
+    expense = models.ForeignKey(
+        'Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид расходов',
+    )
+    purchase_date = models.DateField(verbose_name='Дата расхода')
+    unit = models.CharField(null=True, max_length=20, verbose_name='Единица измерения')
+    number = models.PositiveIntegerField(null=True, verbose_name='Кол-во')
+    price = models.FloatField(null=True, verbose_name='Цена')
+    cost = models.FloatField(null=True, verbose_name='Стоимость')
+
+    class Meta:
+        verbose_name_plural = 'Расходы на услуги'
+        verbose_name = 'Расходы на услуги'
+        ordering = ['purchase_date', 'expense']
+        unique_together = ('expense', 'purchase_date',)
 
 
 class ServiceCost(models.Model):
     service_type = models.ForeignKey(
-        'bboard.Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид услуги',
+        'Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид услуги',
     )
     purchase_date = models.DateField(verbose_name='Дата расхода')
     unit = models.CharField(null=True, max_length=20, verbose_name='Единица измерения')
@@ -81,22 +117,3 @@ class ServiceCost(models.Model):
         verbose_name_plural = 'Расходы на услуги'
         verbose_name = 'Расходы на услуги'
         ordering = ['purchase_date', 'service_type']
-
-
-class DeviceCost(models.Model):
-    device_type = models.ForeignKey(
-        'Expenses', null=True, on_delete=models.PROTECT, verbose_name='Вид оборудования',
-    )    
-    device_room = models.ForeignKey(
-        'DeviceRoom', null=True, on_delete=models.PROTECT, verbose_name='Место размещения',
-    )
-    unit = models.CharField(max_length=20, verbose_name='Единица измерения')
-    number = models.PositiveIntegerField(verbose_name='Кол-во')
-    price = models.FloatField(verbose_name='Цена')
-    cost = models.FloatField(verbose_name='Стоимость')    
-    purchase_date = models.DateTimeField(verbose_name='Дата расхода')
-
-    class Meta:
-        verbose_name_plural = 'Расходы на оборудование'
-        verbose_name = 'Расходы на оборудование'
-        ordering = ['purchase_date']
