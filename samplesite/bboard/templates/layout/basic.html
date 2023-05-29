@@ -13,12 +13,9 @@
             <h1>ERP wellness club</h1>            
         </header>
         <nav>
-            <a href="{% url 'index' %}">Главная</a>
-            <a href="{% url 'add' %}">Добавить</a>
-            <a href="{% url 'servadd' %}">Добавить услуги</a>
-            {% for rubric in rubrics %}
-            <a href="{% url 'by_rubric' rubric.pk %}">{{ rubric.name }}</a>
-            {% endfor %}
+            <a href="{% url 'index' %}">Главная</a>            
+            <a href="{% url 'servadd' %}">Добавить расходы на услуги</a>
+            <a href="{% url 'deviceadd' %}">Добавить расходы на оборудование</a>           
         </nav>
         <section>
         {% block content %}

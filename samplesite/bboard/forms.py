@@ -12,6 +12,17 @@ class BbForm(forms.ModelForm):
         fields = ('title', 'content', 'price', 'rubric')
 
 
+class AddDevice(forms.ModelForm):
+    class Meta:
+        model = models.ExpensesPlan
+        fields = ('expense', 'purchase_date', 'unit', 'number', 'price', 'cost')
+        widgets = {
+            'purchase_date': forms.DateInput(
+                attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'},
+            ),
+        }
+
+
 class AddService(forms.Form):
 
     def __init__(self, *args, **kwargs):

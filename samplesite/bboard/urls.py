@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:rubric_id>/', views.by_rubric, name='by_rubric'),
     path('add/', views.BbCreateView.as_view(), name='add'),
     path('servadd/', views.add_service, name='servadd'),
+    path('deviceadd/', views.AddDeviceView.as_view(), name='deviceadd'),
 ]
