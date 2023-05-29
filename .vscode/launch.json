@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [        
+
+        {
+            "name": "backend",
+            "type": "python",
+            "request": "launch",
+            "module": "service",
+            "args": ["run"],
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "backend_1",
+            "type": "python",
+            "request": "launch",
+            "module": "test",
+            "args": ["run"],
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

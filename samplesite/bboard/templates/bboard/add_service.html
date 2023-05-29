@@ -1,0 +1,15 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Добавление расходов на услуги{% endblock %}
+
+{% block content %}
+<h2>Добавление расходов на услуги</h2>
+<div class="container">
+    <form action="{% url 'servadd' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Добавить">            
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% endblock %}
