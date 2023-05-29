@@ -2,9 +2,11 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 
-from bboard import models
+from bboard import models, repos
 from bboard.forms import AddDevice, AddService, BbForm
-from bboard.repos import service
+from bboard.repos import service, expenses
+
+from handler.app import DashBoard
 
 
 class BbCreateView(CreateView):
@@ -28,6 +30,7 @@ class AddDeviceView(CreateView):
 
 
 def index(request):
+    DashBoard()
     bbs = models.Bb.objects.all()    
     context = {'bbs': bbs}
     return render(request, 'bboard/index.html', context)
@@ -50,5 +53,14 @@ def add_service(request):
         form = AddService()    
     context = {'form': form}
     return render(request, 'bboard/add_service.html', context)
+
+
+def expenses_all(request):
+    query_data = expenses.get_all().records
+    rows = [row.dict() for row in query_data]
+    columns = {col: col for col in list(rows[0].keys())}
+    context = {'rows': rows, 'columns': columns}
+    print(context)
+    return render(request, 'bboard/expenses_all.html', context)
 
 
