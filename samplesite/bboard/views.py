@@ -6,7 +6,7 @@ from bboard import models, repos
 from bboard.forms import AddDevice, AddService, BbForm
 from bboard.repos import service, expenses
 
-from handler.app import DashBoard
+from handler.graph import DashBoard
 
 
 class BbCreateView(CreateView):
