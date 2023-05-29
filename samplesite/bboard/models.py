@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from bboard import config
@@ -95,6 +96,15 @@ class ExpensesPlan(models.Model):
     number = models.PositiveIntegerField(null=True, verbose_name='Кол-во')
     price = models.FloatField(null=True, verbose_name='Цена')
     cost = models.FloatField(null=True, verbose_name='Стоимость')
+
+    def clean(self):
+        errors = {}
+        if self.cost != self.number * self.price:
+            errors['cost'] = ValidationError(
+                'Значение в поле стоимость не равно произведению цены и количества',
+            )
+        if errors:
+            raise ValidationError(errors)
 
     class Meta:
         verbose_name_plural = 'Расходы на услуги'
