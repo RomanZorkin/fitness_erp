@@ -18,8 +18,16 @@
     },
     "cSpell.words": [
         "bboard",
+        "cumsum",
         "icontais",
+        "matplotlib",
         "pydantic",
-        "queryparam"
+        "pyplot",
+        "queryparam",
+        "samplesite",
+        "savefig",
+        "savgol",
+        "scipy",
+        "xticks"
     ]
   }

@@ -22,13 +22,10 @@ def filter_all(request: WSGIRequest) -> QuerySet:
         query = query.filter(expense__name__icontains=expense_contains)
 
     if is_valid_queryparam(cost_min):
-        query = query.filter(cost_gte=cost_min)
+        query = query.filter(cost__gte=cost_min)
 
     if is_valid_queryparam(cost_max):
-        query = query.filter(cost_lte=cost_max)
-
-    if is_valid_queryparam(cost_max):
-        query = query.filter(cost_lte=cost_max)
+        query = query.filter(cost__lte=cost_max)
 
     if is_valid_queryparam(date_min):
         query = query.filter(purchase_date__gte=date_min)
