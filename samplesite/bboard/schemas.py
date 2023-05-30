@@ -27,5 +27,6 @@ class Expenses(BaseModel):
     price: float
     cost: float
 
+
 class ExpensesAll(BaseModel):
     records: List[Expenses]

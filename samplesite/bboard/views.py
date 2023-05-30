@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 
-from bboard import models, repos
+from bboard import models
 from bboard.forms import AddDevice, AddService, BbForm
 from bboard.repos import service, expenses
 
@@ -63,5 +63,3 @@ def expenses_all(request):
     context = {'rows': rows, 'columns': columns}
     print(context)
     return render(request, 'bboard/expenses_all.html', context)
-
-

@@ -1,4 +1,5 @@
-from bboard import config, models, schemas
+from bboard import models, schemas
+
 
 def get_all() -> schemas.ExpensesAll:
     expenses = models.ExpensesPlan.objects.all()

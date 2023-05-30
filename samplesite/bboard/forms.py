@@ -13,6 +13,14 @@ class BbForm(forms.ModelForm):
 
 
 class AddDevice(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AddDevice, self).__init__(*args, **kwargs)
+        self.fields['expense'].choices = [
+            (row.pk, f'{row.name} : {row.expense_area}') for row in models.Expenses.objects.filter(
+                expenses_type=config.ExpenseType().device,
+            )
+        ]
+
     class Meta:
         model = models.ExpensesPlan
         fields = ('expense', 'purchase_date', 'unit', 'number', 'price', 'cost')
@@ -28,7 +36,9 @@ class AddService(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AddService, self).__init__(*args, **kwargs)
         self.fields['service_type'].choices = [
-            (row.pk, row.name) for row in models.Expenses.objects.all()
+            (row.pk, f'{row.name} : {row.expense_area}') for row in models.Expenses.objects.filter(
+                expenses_type=config.ExpenseType().service,
+            )
         ]
 
     def clean(self):
@@ -37,7 +47,7 @@ class AddService(forms.Form):
         start_period = cleaned_data.get('periodicity_start')
         periodicity = int(cleaned_data.get('periodicity'))
         start_project = config.BaseDates().start.date()
-        count_cost  =  cleaned_data.get('price') * cleaned_data.get('number')
+        count_cost = cleaned_data.get('price') * cleaned_data.get('number')
         cost = cleaned_data.get('cost')
         new_date = date(
             year=start_period.year,
@@ -48,14 +58,14 @@ class AddService(forms.Form):
             raise ValidationError(
                 f'Дата окончания расходов меньше или равна дате начала расходов {start_period}'
             )
-        if start_period <= start_project:
+        if start_period < start_project:
             raise ValidationError(
-                f'Дата начала расходов меньше или равна даты начала проекта {start_project}'
+                f'Дата начала расходов меньше даты начала проекта {start_project}'
             )
         if periodicity == 0:
             if new_date < start_period:
                 raise ValidationError(
-                    f'Число начисления расходов {new_date} ранее даты начала расходов {start_project}'
+                    f'Число расходов {new_date} ранее даты начала расходов {start_project}'
                 )
         if cost != count_cost:
             raise ValidationError(
@@ -65,7 +75,7 @@ class AddService(forms.Form):
 
     service_type = forms.ChoiceField(label='Вид услуги')
     purchase_day = forms.ChoiceField(
-        choices=[(day, day) for day in range(1,32)],
+        choices=[(day, day) for day in range(1, 32)],
         label='Число месяца',
     )
     periodicity = forms.ChoiceField(choices=config.get_period_list(), label='Периодичность')
