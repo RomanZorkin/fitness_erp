@@ -48,7 +48,7 @@ class DashBoard:
         self.base_frame = pd.DataFrame({'date': self.time_series}, index=self.time_series)
         self.base_frame[['cost', 'surplus']] = 0
         self.base_frame['income'] = 0
-        self.base_frame['cost'].loc[self.dates] = self.cost        
+        self.base_frame['cost'].loc[self.dates] = self.cost
         self.base_frame['income'][self.base_frame['date'] > datetime(2023, 8, 15)] = 9900
         self.base_frame['income'][self.base_frame['date'] > datetime(2023, 9, 13)] = 14850
         self.base_frame['income'][self.base_frame['date'] > datetime(2023, 9, 24)] = 19800
@@ -66,7 +66,7 @@ class DashBoard:
         return savgol_filter(surplus_x, window_length, 2)
 
     def _draw_expenses_graph(self):
-        locale.setlocale(locale.LC_ALL, '')  # установка русского языка для даты        
+        locale.setlocale(locale.LC_ALL, '')  # установка русского языка для даты
         tmp_df = self.base_frame[self.base_frame['date'] < datetime(2023, 10, 10)].copy()
         x_tics = tmp_df.loc[tmp_df['date'].dt.day == 15]
         plt.plot(tmp_df.index.to_list(), tmp_df['cost'].values.tolist(), c='b')
