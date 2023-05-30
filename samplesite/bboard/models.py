@@ -103,11 +103,13 @@ class ExpensesPlan(models.Model):
             errors['cost'] = ValidationError(
                 'Значение в поле стоимость не равно произведению цены и количества',
             )
+        if self.purchase_date < config.BaseDates().start.date():
+            errors['purchase_date'] = ValidationError('Дата расходов меньше даты начала проекта')
         if errors:
             raise ValidationError(errors)
 
     class Meta:
-        verbose_name_plural = 'Расходы на услуги'
-        verbose_name = 'Расходы на услуги'
+        verbose_name_plural = 'Расходы планируемые'
+        verbose_name = 'Расходы'
         ordering = ['purchase_date', 'expense']
         unique_together = ('expense', 'purchase_date',)
