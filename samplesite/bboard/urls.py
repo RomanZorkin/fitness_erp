@@ -1,6 +1,5 @@
 from django.urls import path
 
-from bboard.views import BbCreateView, by_rubric, index
 from bboard import views
 
 urlpatterns = [
@@ -8,6 +7,6 @@ urlpatterns = [
     path('<int:rubric_id>/', views.by_rubric, name='by_rubric'),
     path('add/', views.BbCreateView.as_view(), name='add'),
     path('servadd/', views.add_service, name='servadd'),
-    path('deviceadd/', views.AddDeviceView.as_view(), name='deviceadd'),
-    path('expenses/', views.expenses_all, name='expenses'),
+    path('deviceadd/', views.AddDeviceView.as_view(), name='deviceadd'),    
+    path('expenses_sample/', views.expenses_sample, name='expenses_sample'),
 ]
