@@ -1,12 +1,8 @@
 {% extends "layout/basic.html" %}
+{% load static %}
 
 {% block content %}
 
-{% for bb in bbs %}
-<div>
-    <h2>{{ bb.title }}</h2>
-    <p>{{ bb.content }}</p>
-    <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
-</div>
-{% endfor %}
+<img src="{% static 'bboard/exp.jpg' %}" class="img-fluid" alt="...">
+
 {% endblock %}

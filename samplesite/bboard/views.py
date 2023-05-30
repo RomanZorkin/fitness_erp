@@ -6,7 +6,7 @@ from bboard import models, repos
 from bboard.forms import AddDevice, AddService, BbForm
 from bboard.repos import service, expenses
 
-from handler.app import DashBoard
+from handler.graph import DashBoard
 
 
 class BbCreateView(CreateView):
@@ -15,7 +15,7 @@ class BbCreateView(CreateView):
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
+        context = super().get_context_data(**kwargs)
         return context
 
 
@@ -25,13 +25,14 @@ class AddDeviceView(CreateView):
     success_url = reverse_lazy('deviceadd')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)        
+        context = super().get_context_data(**kwargs)
         return context
 
 
 def index(request):
-    DashBoard()
-    bbs = models.Bb.objects.all()    
+    tmpdash = DashBoard()
+    del tmpdash
+    bbs = models.Bb.objects.all()
     context = {'bbs': bbs}
     return render(request, 'bboard/index.html', context)
 
@@ -50,7 +51,7 @@ def add_service(request):
         if form.is_valid():
             service.put_periodicity(form)
     else:
-        form = AddService()    
+        form = AddService()
     context = {'form': form}
     return render(request, 'bboard/add_service.html', context)
 
