@@ -138,7 +138,7 @@ class IncomePlan(models.Model):
     class Meta:
         verbose_name_plural = 'Доходы планируемые'
         verbose_name = 'Доходы'
-        ordering = ['name']
+        ordering = ['income_date', 'name']
 
 
 class IncomeFactoryBoard(models.Model):
@@ -151,7 +151,7 @@ class IncomeFactoryBoard(models.Model):
     lesson_price = models.FloatField(verbose_name='Цена урока')
     filling = models.IntegerField(
         validators=[MaxValueValidator(100), MinValueValidator(1)],
-        verbose_name='Продолжительность занятия',
+        verbose_name='Наполненность занятия',
     )
     amount = models.FloatField(verbose_name='Стоимость')
 
