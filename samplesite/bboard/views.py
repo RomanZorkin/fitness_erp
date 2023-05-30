@@ -56,10 +56,12 @@ def add_service(request):
     return render(request, 'bboard/add_service.html', context)
 
 
-def expenses_all(request):
-    query_data = expenses.get_all().records
+def expenses_sample(request):
+    exp_types = models.ExpensesType.objects.all()
+    exp_types = [{'pk': row.pk, 'name': row.name} for row in exp_types]
+    exp_area = models.ExpensesArea.objects.all()
+    exp_area = [{'pk': row.pk, 'name': row.name} for row in exp_area]
+    query_data = expenses.get_sample(request).records
     rows = [row.dict() for row in query_data]
-    columns = {col: col for col in list(rows[0].keys())}
-    context = {'rows': rows, 'columns': columns}
-    print(context)
-    return render(request, 'bboard/expenses_all.html', context)
+    context = {'exp_types': exp_types, 'exp_area': exp_area, 'rows': rows}
+    return render(request, 'bboard/expenses_sample.html', context)

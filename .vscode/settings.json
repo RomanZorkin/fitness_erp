@@ -17,6 +17,9 @@
         "**/__pycache__": true
     },
     "cSpell.words": [
-        "bboard"
+        "bboard",
+        "icontais",
+        "pydantic",
+        "queryparam"
     ]
   }
