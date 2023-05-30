@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from bboard import config
@@ -136,5 +137,36 @@ class IncomePlan(models.Model):
 
     class Meta:
         verbose_name_plural = 'Доходы планируемые'
+        verbose_name = 'Доходы'
+        ordering = ['name']
+
+
+class IncomeFactoryBoard(models.Model):
+    name = models.ForeignKey(
+        'Incomes', null=True, on_delete=models.PROTECT, verbose_name='Вид доходов',
+    )
+    lesson_start = models.TimeField(verbose_name='Начало урока')
+    lesson_date = models.DateField(verbose_name='Дата урока')
+    duration = models.DurationField(verbose_name='Продолжительность')
+    lesson_price = models.FloatField(verbose_name='Цена урока')
+    filling = models.IntegerField(
+        validators=[MaxValueValidator(100), MinValueValidator(1)],
+        verbose_name='Продолжительность занятия',
+    )
+    amount = models.FloatField(verbose_name='Стоимость')
+
+    def clean(self):
+        errors = {}
+        if self.amount != self.filling * self.lesson_price:
+            errors['cost'] = ValidationError(
+                'Значение в поле стоимость не равно произведению цены и посещения',
+            )
+        if self.lesson_date < config.BaseDates().start.date():
+            errors['purchase_date'] = ValidationError('Дата занятия меньше даты начала проекта')
+        if errors:
+            raise ValidationError(errors)
+
+    class Meta:
+        verbose_name_plural = 'Доходы от бордов'
         verbose_name = 'Доходы'
         ordering = ['name']
