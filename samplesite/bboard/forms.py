@@ -95,3 +95,30 @@ class AddService(forms.Form):
     number = forms.IntegerField(max_value=10000000, label='Кол-во')
     price = forms.FloatField(max_value=10000000, label='Цена')
     cost = forms.FloatField(max_value=10000000, label='Стоимость')
+
+
+class AddIncomeBoard(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(AddIncomeBoard, self).__init__(*args, **kwargs)
+        self.fields['income_type'].choices = [
+            (row.pk, f'{row.name} : {row.expense_area}') for row in models.Incomes.objects.all()
+        ]
+
+    income_type = forms.CharField()
+    periodicity_start = forms.DateField(
+        widget=forms.widgets.DateInput(
+            attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'},
+        ),
+        label='Дата начала занятий'
+    )
+    periodicity_end = forms.DateField(
+        widget=forms.widgets.DateInput(
+            attrs={'type': 'date', 'placeholder': 'yyyy-mm-dd (DOB)', 'class': 'form-control'},
+        ),
+        label='Дата окончания занятий',
+    )
+    lesson_start = forms.TimeField()
+    duration = forms.DurationField()
+    lesson_price = forms.FloatField()
+    filling = forms.IntegerField()
+    amount = forms.FloatField()
